@@ -1,6 +1,6 @@
 public class ConcretePawn : IPawn
 {
-    //Feel like we really need to standardize these like very similar scores. They probably be handled in some more standardized way?
+    //Feel like we really need to standardize these like very similar scores. They should probably be handled in some more standardized way?
     protected BaseOpinion baseOpinionScore;
     protected IMilitaryPower militaryPowerScore{get;}
     protected float popularityScore; //this could also be made into something more robust than just being a float
