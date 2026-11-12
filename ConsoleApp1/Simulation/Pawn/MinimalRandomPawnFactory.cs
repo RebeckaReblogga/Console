@@ -4,7 +4,7 @@ public class MinimalRandomPawnFactory : IPawnFactory
 {
     public IPawn CreatePawn()
     {
-        return new ConcretePawn("what would you do if when you okay so he said yes would go?");
+        return new ConcretePawn("name");
     }
     public List<IPawn> Populate(int count)
     {

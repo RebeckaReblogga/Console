@@ -8,13 +8,13 @@ public class ConcretePawn : IPawn
     protected float popularityScore; //this could also be made into something more robust than just being a float
     protected List<IEvent> availableEvents;
     protected ICulture culturalReference;
-    protected List<IAspect> keyValues; //these are the aspects this pawn cares about the most
+    protected ICulture culturalOpinions;
     protected List<IAspect> ownedAspects;
     protected IAspect gender;
     protected IHierarchyLevel hierarchyLevel;
 
     //big constructor
-    public ConcretePawn(string pawnName, BaseOpinion baseOpinionScore, IMilitaryPower militaryPowerScore, float popularityScore, List<IEvent> availableEvents, ICulture culturalReference, List<IAspect> keyValues, List<IAspect> ownedAspects, IAspect gender, IHierarchyLevel hierarchyLevel)
+    public ConcretePawn(string pawnName, BaseOpinion baseOpinionScore, IMilitaryPower militaryPowerScore, float popularityScore, List<IEvent> availableEvents, ICulture culturalReference, ICulture culturalOpinions, List<IAspect> ownedAspects, IAspect gender, IHierarchyLevel hierarchyLevel)
     {
         this.pawnName = pawnName;
         this.baseOpinionScore = baseOpinionScore;
@@ -22,7 +22,7 @@ public class ConcretePawn : IPawn
         this.popularityScore = popularityScore;
         this.availableEvents = availableEvents;
         this.culturalReference = culturalReference;
-        this.keyValues = keyValues;
+        this.culturalOpinions = culturalOpinions;
         this.ownedAspects = ownedAspects;
         this.gender = gender;
         this.hierarchyLevel = hierarchyLevel;
@@ -31,10 +31,7 @@ public class ConcretePawn : IPawn
     public ConcretePawn(string pawnName)
     {
         this.pawnName = pawnName;
-    }
-
-    
-
+    }    
     public IOpinion GetBaseOpinion()
     {
         return baseOpinionScore;
@@ -51,14 +48,23 @@ public class ConcretePawn : IPawn
     {
         return 0;
     }
-
     public void SetHierarchyLevel(IHierarchyLevel hierarchyLevel)
     {
         this.hierarchyLevel = hierarchyLevel;
     }
-
     public string GetName()
     {
         return pawnName;
+    }
+    public IOpinion GetOpinionOfPawn(IPawn otherPawn)
+    {
+        //how do we make sure to take everything in to account? I was thinking either decorating this or something like that?
+        return otherPawn.GetBaseOpinion();
+    }
+
+    public IEvent PickAction()
+    {
+        //pick an event to perform. Should be decided from what would be strategically benefitial and stuffs
+        throw new NotImplementedException();
     }
 }

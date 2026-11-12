@@ -2,11 +2,12 @@ public class TestStepStrategy : ISimulationStepStrategy
 {
     public SimulationState Execute(SimulationState state) //TODO
     {
-        foreach(IHierarchyLevel hierarchyLevel in state.hierarchy.GetHierarchyLevels())
+        foreach(IPawn pawn in state.hierarchy.GetAllPawns())
         {
-            foreach(IPawn pawn in hierarchyLevel.GetMembers())
+            foreach(IPawn otherPawn in state.hierarchy.GetAllPawns())
             {
-                Console.WriteLine(pawn.GetName());
+                if (otherPawn != pawn)
+                    Console.WriteLine(pawn.GetName() + " has this opinion of " + otherPawn.GetName() + ": " + pawn.GetOpinionOfPawn(otherPawn).Calculate().ToString());
             }
         }
         return state;

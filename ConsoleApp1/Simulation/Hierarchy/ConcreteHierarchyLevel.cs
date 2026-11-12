@@ -10,7 +10,6 @@ public class ConcreteHierarchyLevel : IHierarchyLevel
             AddMember(pawn);
         }
     }
-
     public void AddMember(IPawn pawn)
     {
         //should maybe check the pawn isnt already in this level so nothing weird would happen there.
@@ -27,5 +26,5 @@ public class ConcreteHierarchyLevel : IHierarchyLevel
         {
             members.Remove(pawn);
         }
-    }
+    }    
 }

@@ -8,4 +8,6 @@ public interface IPawn
     public float GetPopularity();
     public float GetPower();
     public void SetHierarchyLevel(IHierarchyLevel hierarchyLevel);
+    public IOpinion GetOpinionOfPawn(IPawn otherPawn);
+    public IEvent PickAction();
 }
