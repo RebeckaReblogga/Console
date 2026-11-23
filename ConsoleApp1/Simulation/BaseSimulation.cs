@@ -1,8 +1,8 @@
 public class BaseSimulation : ISimulation
 {
-    SimulationState currentState;
-    ISimulationInitializeStrategy initializeStrategy;
-    ISimulationStepStrategy stepStrategy;
+    private SimulationState currentState;
+    private ISimulationInitializeStrategy initializeStrategy;
+    private ISimulationStepStrategy stepStrategy;
 
     public BaseSimulation(ISimulationInitializeStrategy initializeStrategy, ISimulationStepStrategy stepStrategy)
     {

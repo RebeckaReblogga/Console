@@ -1,4 +1,4 @@
 public interface ICulture
 {
-    public List<IAspect> GetAspects();
+    public List<AspectCategory> GetAspectCategories();
 }

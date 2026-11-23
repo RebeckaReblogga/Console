@@ -1,5 +1,10 @@
-public abstract class OpinionDecorater : IOpinion
+public abstract class OpinionDecorator : IOpinion
 {
-    private IOpinion decoratedOpinion;
+    protected IOpinion decoratedOpinion;
+    public OpinionDecorator(IOpinion decoratedOpinion)
+    {
+        this.decoratedOpinion = decoratedOpinion;
+    }
+
     public abstract float Calculate();
 }

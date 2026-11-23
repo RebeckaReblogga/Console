@@ -3,42 +3,35 @@ public class ConcretePawn : IPawn
     public string pawnName{get; private set;}
 
     //Feel like we really need to standardize these like very similar scores. They should probably be handled in some more standardized way?
-    protected BaseOpinion baseOpinionScore;
-    protected IMilitaryPower militaryPowerScore{get;}
+    protected MilitaryPower militaryPower;
     protected float popularityScore; //this could also be made into something more robust than just being a float
-    protected List<IEvent> availableEvents;
+    protected List<PawnEventDefinition> availableEvents;
     protected ICulture culturalReference;
     protected ICulture culturalOpinions;
-    protected List<IAspect> ownedAspects;
-    protected IAspect gender;
+    protected PersonalEconomy personalEconomy;
     protected IHierarchyLevel hierarchyLevel;
+    protected Dictionary<IPawn,float> relationList = new Dictionary<IPawn, float>();
+    private Dictionary<AspectCategory,AspectDefinition> aspects = new();
+    protected RandomGenerator randomGenerator;
 
-    //big constructor
-    public ConcretePawn(string pawnName, BaseOpinion baseOpinionScore, IMilitaryPower militaryPowerScore, float popularityScore, List<IEvent> availableEvents, ICulture culturalReference, ICulture culturalOpinions, List<IAspect> ownedAspects, IAspect gender, IHierarchyLevel hierarchyLevel)
+    public ConcretePawn(string pawnName, MilitaryPower militaryPower, float popularityScore, List<PawnEventDefinition> availableEvents, ICulture culturalReference, ICulture culturalOpinions, IHierarchyLevel hierarchyLevel, PersonalEconomy personalEconomy, RandomGenerator randomGenerator)
     {
         this.pawnName = pawnName;
-        this.baseOpinionScore = baseOpinionScore;
-        this.militaryPowerScore = militaryPowerScore;
+        this.militaryPower = militaryPower;
         this.popularityScore = popularityScore;
         this.availableEvents = availableEvents;
         this.culturalReference = culturalReference;
         this.culturalOpinions = culturalOpinions;
-        this.ownedAspects = ownedAspects;
-        this.gender = gender;
         this.hierarchyLevel = hierarchyLevel;
+        this.personalEconomy = personalEconomy;
+        this.randomGenerator = randomGenerator;
     }
-    //tiny constructor for testing
-    public ConcretePawn(string pawnName)
+
+    public List<AspectDefinition> ownedAspects => aspects.Values.ToList(); 
+      
+    public MilitaryPower GetMilitaryPower()
     {
-        this.pawnName = pawnName;
-    }    
-    public IOpinion GetBaseOpinion()
-    {
-        return baseOpinionScore;
-    }
-    public IMilitaryPower GetMilitaryPower()
-    {
-        return militaryPowerScore;
+        return militaryPower;
     }
     public float GetPopularity() //TODO
     {
@@ -56,15 +49,85 @@ public class ConcretePawn : IPawn
     {
         return pawnName;
     }
-    public IOpinion GetOpinionOfPawn(IPawn otherPawn)
-    {
-        //how do we make sure to take everything in to account? I was thinking either decorating this or something like that?
-        return otherPawn.GetBaseOpinion();
-    }
-
-    public IEvent PickAction()
+    public IEventDefinition PickEvent()
     {
         //pick an event to perform. Should be decided from what would be strategically benefitial and stuffs
-        throw new NotImplementedException();
+        Dictionary<float, IEventDefinition> eventsDesireabilityList = new Dictionary<float, IEventDefinition>();
+        foreach(IEventDefinition eventDefinition in availableEvents)
+        {
+            eventsDesireabilityList.Add(eventDefinition.GetPawnDesireToPerform(this), eventDefinition);
+        }
+        //if there are no events available
+        if(eventsDesireabilityList.Count() == 0)
+        {
+            return new NullEventDefinition();
+        }
+        
+        return eventsDesireabilityList[eventsDesireabilityList.Keys.Max()];
+    }
+    public float GetOpinionScoreOfPawn(IPawn otherPawn) //Slightly less messy now, but still very awkward
+    {
+        List<AspectDefinition> otherPawnAspects = otherPawn.GetAspects();
+        BaseOpinionFromCulture baseOpinion = new BaseOpinionFromCulture(otherPawnAspects);
+        PersonalOpinionDecorator personalOpinionDecorator = new PersonalOpinionDecorator(baseOpinion, culturalOpinions, otherPawnAspects);
+        MilitaryOpinionDecorator militaryOpinionDecorator = new MilitaryOpinionDecorator(personalOpinionDecorator, militaryPower, otherPawn.GetMilitaryPower());
+        //we are adding on the relationshipScore to this to get the final resulting opinion. Maybe this should be done in some more elegant way? Or maybe I need to make the terminology more consistent
+        if (relationList.Keys.Contains(otherPawn))
+        {
+            return relationList[otherPawn] + militaryOpinionDecorator.Calculate();
+        }
+        return 0;
+    }
+
+    public bool HasAspect(IAspect aspect)
+    {
+        if (ownedAspects.Contains(aspect))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void SetAspect(AspectDefinition aspect)
+    {
+        aspects[aspect.category] = aspect;
+    }
+
+    public void ModifyPopularity(float delta)
+    {
+        popularityScore += delta;
+    }
+    public IEconomy GetEconomy()
+    {
+        return personalEconomy;
+    }
+    public List<AspectDefinition> GetAspects()
+    {
+        return aspects.Values.ToList();
+    }
+    public void SetRelationToPawn(IPawn pawn, float relationScore)
+    {
+        if (relationList.ContainsKey(pawn))
+        {
+            relationList[pawn] = relationScore;
+        }
+        else
+        {
+            relationList.Add(pawn, relationScore);
+        }
+    }
+    public float GetRelationToPawn(IPawn pawn)
+    {
+        if (relationList.ContainsKey(pawn))
+        {
+            return relationList[pawn];
+        }
+        //this pawn does not have a relation to this other pawn!
+        return 0;
+    }
+
+    public IHierarchyLevel GetHierarchyLevel()
+    {
+        return hierarchyLevel;
     }
 }

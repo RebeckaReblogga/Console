@@ -5,11 +5,9 @@ public class ConcreteHierarchyLevel : IHierarchyLevel
     //could have different constructors if i want i guess
     public ConcreteHierarchyLevel(List<IPawn> pawns)
     {
-        foreach(IPawn pawn in pawns)
-        {
-            AddMember(pawn);
-        }
+        Initialize(pawns);
     }
+    public ConcreteHierarchyLevel(){}
     public void AddMember(IPawn pawn)
     {
         //should maybe check the pawn isnt already in this level so nothing weird would happen there.
@@ -26,5 +24,18 @@ public class ConcreteHierarchyLevel : IHierarchyLevel
         {
             members.Remove(pawn);
         }
-    }    
+    }
+    public void Initialize(List<IPawn> pawns)
+    {
+        //clear if there are for some reason already pawns assigned
+        foreach(IPawn member in members)
+        {
+            RemoveMember(member);
+        }
+        //fill with the provided pawns
+        foreach(IPawn pawn in pawns)
+        {
+            AddMember(pawn);
+        }
+    }
 }
