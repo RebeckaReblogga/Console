@@ -1,15 +1,17 @@
-public class PersonalCulture : ICulture
+public class PersonalCulture
 {
-    private ConcreteCulture culturalReference;
+    private ICulture culturalReference;
+    public Dictionary<AspectDefinition, float> opinionsOnAspects = new Dictionary<AspectDefinition, float>();
 
-    public PersonalCulture(ConcreteCulture culturalReference)
+    public PersonalCulture(ICulture culturalReference, RandomGenerator randomGenerator)
     {
         this.culturalReference = culturalReference;
-    }
-
-    public List<AspectCategory> GetAspectCategories()
-    {
-        //placeholder
-        return culturalReference.GetAspectCategories();
+        foreach(AspectCategory category in culturalReference.GetAspectCategories())
+        {
+            foreach(AspectDefinition aspectDefinition in category._aspects)
+            {
+                opinionsOnAspects.Add(aspectDefinition, randomGenerator.GetRandomNumberSingle(-1, 1));
+            }
+        }
     }
 }

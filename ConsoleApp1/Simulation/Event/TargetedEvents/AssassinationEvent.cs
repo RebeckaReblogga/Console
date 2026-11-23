@@ -1,6 +1,9 @@
 public class AssassinationEventDefintion : PawnEventDefinition
 {
-    public AssassinationEventDefintion(SimulationState simulationState, List<IAspectEventInfluence> aspectEventInfluences, float baseDesireability) : base(simulationState, aspectEventInfluences, baseDesireability){}
+    public AssassinationEventDefintion(SimulationState simulationState, float baseDesireability) : base(simulationState, baseDesireability)
+    {
+    }
+
     public override IEvent CreateEvent(RandomGenerator randomGenerator, IPawn performer)
     {
         IPawn target = new NullPawn();

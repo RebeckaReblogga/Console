@@ -1,14 +1,13 @@
 public abstract class PawnEventDefinition : IEventDefinition
 {
     protected SimulationState simulationState;
-    protected List<IAspectEventInfluence> aspectEventInfluences;
+    protected List<IAspectEventInfluence> aspectEventInfluences = new List<IAspectEventInfluence>{};
     float baseDesireability;
     protected RandomGenerator randomGenerator;
 
-    protected PawnEventDefinition(SimulationState simulationState, List<IAspectEventInfluence> aspectEventInfluences, float baseDesireability)
+    protected PawnEventDefinition(SimulationState simulationState, float baseDesireability)
     {
         this.simulationState = simulationState;
-        this.aspectEventInfluences = aspectEventInfluences;
         this.baseDesireability = baseDesireability;
         this.randomGenerator = simulationState.randomGenerator;
     }
@@ -29,5 +28,16 @@ public abstract class PawnEventDefinition : IEventDefinition
             }
         }
         return delta;
+    }
+    public void AddInfluence(IAspectEventInfluence influence)
+    {
+        aspectEventInfluences.Add(influence);
+    }
+    public void AddInfluence(List<IAspectEventInfluence> influences)
+    {
+        foreach(IAspectEventInfluence influence in influences)
+        {
+            aspectEventInfluences.Add(influence);
+        }
     }
 }

@@ -7,14 +7,14 @@ public class ConcretePawn : IPawn
     protected float popularityScore; //this could also be made into something more robust than just being a float
     protected List<PawnEventDefinition> availableEvents;
     protected ICulture culturalReference;
-    protected ICulture culturalOpinions;
+    protected PersonalCulture culturalOpinions;
     protected PersonalEconomy personalEconomy;
     protected IHierarchyLevel hierarchyLevel;
     protected Dictionary<IPawn,float> relationList = new Dictionary<IPawn, float>();
     private Dictionary<AspectCategory,AspectDefinition> aspects = new();
     protected RandomGenerator randomGenerator;
 
-    public ConcretePawn(string pawnName, MilitaryPower militaryPower, float popularityScore, List<PawnEventDefinition> availableEvents, ICulture culturalReference, ICulture culturalOpinions, IHierarchyLevel hierarchyLevel, PersonalEconomy personalEconomy, RandomGenerator randomGenerator)
+    public ConcretePawn(string pawnName, MilitaryPower militaryPower, float popularityScore, List<PawnEventDefinition> availableEvents, ICulture culturalReference, PersonalCulture culturalOpinions, IHierarchyLevel hierarchyLevel, PersonalEconomy personalEconomy, RandomGenerator randomGenerator)
     {
         this.pawnName = pawnName;
         this.militaryPower = militaryPower;
@@ -52,10 +52,10 @@ public class ConcretePawn : IPawn
     public IEventDefinition PickEvent()
     {
         //pick an event to perform. Should be decided from what would be strategically benefitial and stuffs
-        Dictionary<float, IEventDefinition> eventsDesireabilityList = new Dictionary<float, IEventDefinition>();
+        Dictionary<IEventDefinition, float> eventsDesireabilityList = new Dictionary<IEventDefinition, float>();
         foreach(IEventDefinition eventDefinition in availableEvents)
         {
-            eventsDesireabilityList.Add(eventDefinition.GetPawnDesireToPerform(this), eventDefinition);
+            eventsDesireabilityList.Add(eventDefinition, eventDefinition.GetPawnDesireToPerform(this) + randomGenerator.GetRandomNumberSingle(-0.5f, 0.5f));
         }
         //if there are no events available
         if(eventsDesireabilityList.Count() == 0)
@@ -63,7 +63,7 @@ public class ConcretePawn : IPawn
             return new NullEventDefinition();
         }
         
-        return eventsDesireabilityList[eventsDesireabilityList.Keys.Max()];
+        return eventsDesireabilityList.MaxBy(entry => entry.Value).Key; //dont love randomly using a lambda expression but eh
     }
     public float GetOpinionScoreOfPawn(IPawn otherPawn) //Slightly less messy now, but still very awkward
     {

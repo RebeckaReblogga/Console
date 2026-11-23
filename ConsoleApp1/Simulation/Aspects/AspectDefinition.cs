@@ -3,20 +3,20 @@ public class AspectDefinition : IAspect
     public AspectDefinition(AspectCategory category, string name, float desireability)
     {
         this.category = category;
-        Name = name;
+        this.name = name;
         this.desireability = desireability;
     }
 
     public AspectCategory category{get;}
-    public string Name{get;}
+    public string name{get;}
     public float desireability{get;}
     public float GetDesireAbility()
     {
-        throw new NotImplementedException();
+        return desireability;
     }
 
     public string GetName()
     {
-        throw new NotImplementedException();
+        return name;
     }
 }

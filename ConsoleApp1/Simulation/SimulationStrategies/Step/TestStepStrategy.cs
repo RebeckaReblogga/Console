@@ -6,8 +6,7 @@ public class TestStepStrategy : ISimulationStepStrategy
         foreach(IPawn pawn in state.hierarchy.GetAllPawns())
         {
             //picking the event
-            // IEventDefinition pickedEventType = pawn.PickEvent();
-            IEventDefinition pickedEventType = state.availableEvents[state.randomGenerator.GetRandomNumber(state.availableEvents.Count)];
+            IEventDefinition pickedEventType = pawn.PickEvent();
             IEvent createdEvent = pickedEventType.CreateEvent(state.randomGenerator, pawn);
             List<IAction> effects = createdEvent.Perform(state.randomGenerator);
             eventDescriptions.Add(createdEvent.GetEventDescription());

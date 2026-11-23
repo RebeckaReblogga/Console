@@ -1,6 +1,9 @@
 public class HoldSpeechEventDefinition : PawnEventDefinition
 {
-    public HoldSpeechEventDefinition(SimulationState simulationState, List<IAspectEventInfluence> aspectEventInfluences, float baseDesireability) : base(simulationState, aspectEventInfluences, baseDesireability){}
+    public HoldSpeechEventDefinition(SimulationState simulationState, float baseDesireability) : base(simulationState, baseDesireability)
+    {
+    }
+
     public override IEvent CreateEvent(RandomGenerator randomGenerator, IPawn performer)
     {
         string description = performer.GetName() + " held a speech";

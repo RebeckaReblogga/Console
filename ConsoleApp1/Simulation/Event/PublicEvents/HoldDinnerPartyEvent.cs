@@ -1,6 +1,8 @@
 public class HoldDinnerPartyEventDefinition : PawnEventDefinition
 {
-    public HoldDinnerPartyEventDefinition(SimulationState simulationState, List<IAspectEventInfluence> aspectEventInfluences, float baseDesireability) : base(simulationState, aspectEventInfluences, baseDesireability){}
+    public HoldDinnerPartyEventDefinition(SimulationState simulationState, float baseDesireability) : base(simulationState, baseDesireability)
+    {
+    }
 
     public override IEvent CreateEvent(RandomGenerator randomGenerator, IPawn performer)
     {

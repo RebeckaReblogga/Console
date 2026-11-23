@@ -21,7 +21,8 @@ public class MinimalRandomPawnFactory : IPawnFactory
 
     public IPawn CreatePawn()
     {
-        IPawn pawn = new ConcretePawn("name", new MilitaryPower(new List<MilitaryAsset>{}), 0.5f, availableEvents, culturalReference, culturalReference, hierarchyLevels[0], new PersonalEconomy(systemEconomy), randomGenerator);
+        PersonalCulture personalCultureVariation = new PersonalCulture(culturalReference, randomGenerator);
+        IPawn pawn = new ConcretePawn("name", new MilitaryPower(new List<MilitaryAsset>{}), 0.5f, availableEvents, culturalReference, personalCultureVariation, hierarchyLevels[0], new PersonalEconomy(systemEconomy), randomGenerator);
         foreach(AspectCategory aspectCategory in culturalReference.GetAspectCategories())
         {
             pawn.SetAspect(aspectCategory._aspects[randomGenerator.GetRandomNumber(aspectCategory._aspects.Count)]);
